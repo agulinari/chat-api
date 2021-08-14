@@ -1,5 +1,6 @@
 package com.asapp.backend.challenge.service.impl;
 
+import com.asapp.backend.challenge.exceptions.InvalidUserException;
 import com.asapp.backend.challenge.persistence.entities.UserEntity;
 import com.asapp.backend.challenge.persistence.mappers.UserMapper;
 import com.asapp.backend.challenge.persistence.repository.api.UserRepository;
@@ -30,10 +31,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginResource login(String username, String password) {
+    public LoginResource login(String username, String password) throws InvalidUserException {
         Optional<UserEntity> oUserEntity = userRepository.getUser(username, password);
         if (!oUserEntity.isPresent()) {
-
+            throw new InvalidUserException();
         }
         UserEntity userEntity = oUserEntity.get();
         String token = tokenService.generateToken();

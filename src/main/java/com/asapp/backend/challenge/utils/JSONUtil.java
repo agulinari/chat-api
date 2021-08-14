@@ -2,10 +2,12 @@ package com.asapp.backend.challenge.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
+@Slf4j
 public class JSONUtil {
     public static String dataToJson(Object data) {
         try {
@@ -29,6 +31,7 @@ public class JSONUtil {
             mapper.disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
             return mapper.readValue(json, clazz);
         } catch (IOException e) {
+            log.error("IOEXception while mapping json (" + json + ") to Data", e);
             throw new RuntimeException("IOEXception while mapping json (" + json + ") to Data");
         }
     }
