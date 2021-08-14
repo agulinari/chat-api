@@ -1,5 +1,6 @@
 package com.asapp.backend.challenge.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,19 @@ public class JSONUtil {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             mapper.disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
             return mapper.readValue(json, clazz);
+        } catch (IOException e) {
+            log.error("IOEXception while mapping json (" + json + ") to Data", e);
+            throw new RuntimeException("IOEXception while mapping json (" + json + ") to Data");
+        }
+    }
+
+    public static <T>  T jsonToData(String json, TypeReference typeReference) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
+            return mapper.readValue(json, typeReference);
         } catch (IOException e) {
             log.error("IOEXception while mapping json (" + json + ") to Data", e);
             throw new RuntimeException("IOEXception while mapping json (" + json + ") to Data");

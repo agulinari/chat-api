@@ -37,7 +37,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public boolean validateToken(String token) {
-        try {
+       try {
             DecodedJWT jwt = verifier.verify(token);
             return true;
         } catch (JWTVerificationException exception) {

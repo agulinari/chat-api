@@ -12,8 +12,8 @@ public class TokenValidatorFilter {
     private static final TokenService tokenService = new TokenServiceImpl();
 
     public static Filter validateUser = (Request req, Response resp) -> {
-        // TODO: validate token
-        if (!tokenService.validateToken("token")) {
+        String token = req.headers("Authorization");
+        if (!tokenService.validateToken(token)) {
             Spark.halt(401, "Invalid token");
         }
     };
