@@ -5,12 +5,15 @@ import com.asapp.backend.challenge.controller.HealthController;
 import com.asapp.backend.challenge.controller.MessagesController;
 import com.asapp.backend.challenge.controller.UsersController;
 import com.asapp.backend.challenge.filter.TokenValidatorFilter;
+import com.asapp.backend.challenge.utils.DatabaseUtil;
 import com.asapp.backend.challenge.utils.Path;
 import spark.Spark;
 
 public class Application {
 
     public static void main(String[] args) {
+
+        DatabaseUtil.init();
 
         // Spark Configuration
         Spark.port(8080);
@@ -26,6 +29,8 @@ public class Application {
         Spark.get(Path.MESSAGES, MessagesController.getMessages);
         // Health
         Spark.post(Path.HEALTH, HealthController.check);
+
+
 
     }
 
