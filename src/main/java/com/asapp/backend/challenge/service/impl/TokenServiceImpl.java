@@ -9,6 +9,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
 @Slf4j
 public class TokenServiceImpl implements TokenService {
 
@@ -25,12 +29,15 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public String generateToken() {
         try {
+            final Instant now = Instant.now();
             String token = JWT.create()
                     .withIssuer("auth0")
+                    .withIssuedAt(Date.from(now))
+                    .withExpiresAt(Date.from(now.plus(15, ChronoUnit.MINUTES)))
                     .sign(algorithm);
             return token;
         } catch (JWTCreationException exception){
-            log.error("Invalid Signing configuration", exception);
+            log.error("Error creating token", exception);
             throw exception;
         }
     }
@@ -38,10 +45,10 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public boolean validateToken(String token) {
        try {
-            DecodedJWT jwt = verifier.verify(token);
+            verifier.verify(token);
             return true;
         } catch (JWTVerificationException exception) {
-            log.error("Invalid Signature", exception);
+            log.error("Invalid token", exception);
             return false;
         }
     }

@@ -10,10 +10,12 @@ import com.asapp.backend.challenge.service.impl.UserServiceImpl;
 import com.asapp.backend.challenge.utils.HttpCodes;
 import com.asapp.backend.challenge.utils.JSONUtil;
 import com.fasterxml.jackson.core.JsonParseException;
+import lombok.extern.slf4j.Slf4j;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
+@Slf4j
 public class AuthController {
 
     private static final UserService userService = new UserServiceImpl();

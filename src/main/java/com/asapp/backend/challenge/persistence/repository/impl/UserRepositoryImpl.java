@@ -4,10 +4,12 @@ import com.asapp.backend.challenge.exceptions.InvalidUserException;
 import com.asapp.backend.challenge.persistence.entities.UserEntity;
 import com.asapp.backend.challenge.persistence.repository.api.UserRepository;
 import com.asapp.backend.challenge.utils.DatabaseUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.Optional;
 
+@Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
 
@@ -34,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
             connection.commit();
         } catch(SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
             throw new InvalidUserException();
         }
         finally
@@ -47,7 +49,7 @@ public class UserRepositoryImpl implements UserRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
         return new UserEntity(generatedKey, username, password);
@@ -55,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserEntity> getUser(String username, String password) {
+    public Optional<UserEntity> getUser(String username, String password) throws SQLException {
 
         String sql = "SELECT id, username, password FROM users WHERE username = ? AND password = ?";
         UserEntity userEntity = null;
@@ -80,7 +82,8 @@ public class UserRepositoryImpl implements UserRepository {
 
         } catch(SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw e;
         }
         finally
         {
@@ -92,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
 

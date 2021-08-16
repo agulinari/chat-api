@@ -6,6 +6,7 @@ import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
 import com.asapp.backend.challenge.persistence.repository.api.MessageRepository;
 import com.asapp.backend.challenge.utils.DatabaseUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -14,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class MessageRepositoryImpl implements MessageRepository {
 
-
     @Override
-    public List<MessageEntity> getMessages(Integer recipient, Integer start, Integer limit) {
+    public List<MessageEntity> getMessages(Integer recipient, Integer start, Integer limit) throws SQLException {
         String sql = "SELECT id, timestamp, sender, recipient, type, text FROM messages WHERE recipient = ? and id >= ? LIMIT ?";
         Connection connection = null;
         List<MessageEntity> messages = new ArrayList<>();
@@ -48,7 +49,8 @@ public class MessageRepositoryImpl implements MessageRepository {
 
         } catch(SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw e;
         }
         finally
         {
@@ -60,7 +62,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
 
@@ -68,7 +70,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Optional<ImageMessageEntity> getImageMessage(Integer messageId) {
+    public Optional<ImageMessageEntity> getImageMessage(Integer messageId) throws SQLException {
         String sql = "SELECT id, url, height, width FROM messages_image WHERE message_id = ? ";
         ImageMessageEntity entity = null;
         Connection connection = null;
@@ -92,7 +94,8 @@ public class MessageRepositoryImpl implements MessageRepository {
 
         } catch(SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw e;
         }
         finally
         {
@@ -104,7 +107,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
 
@@ -112,7 +115,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Optional<VideoMessageEntity> getVideoMessage(Integer messageId) {
+    public Optional<VideoMessageEntity> getVideoMessage(Integer messageId) throws SQLException {
         String sql = "SELECT id, url, source FROM messages_video WHERE message_id = ? ";
         VideoMessageEntity entity = null;
         Connection connection = null;
@@ -135,7 +138,8 @@ public class MessageRepositoryImpl implements MessageRepository {
 
         } catch(SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw e;
         }
         finally
         {
@@ -147,7 +151,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
 
@@ -180,10 +184,8 @@ public class MessageRepositoryImpl implements MessageRepository {
             connection.commit();
         } catch(SQLException e)
         {
-
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
             throw new InvalidUserException();
-
         }
         finally
         {
@@ -195,7 +197,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
         return generatedKey;
@@ -203,7 +205,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Integer saveImageMessage(MessageEntity messageEntity, ImageMessageEntity imageMessageEntity) {
+    public Integer saveImageMessage(MessageEntity messageEntity, ImageMessageEntity imageMessageEntity) throws SQLException {
 
         String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?)";
         String sqlDetail = "INSERT INTO messages_image(message_id,url,height,width) VALUES(?,?,?,?)";
@@ -236,7 +238,8 @@ public class MessageRepositoryImpl implements MessageRepository {
             connection.commit();
         } catch(SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw e;
         }
         finally
         {
@@ -248,14 +251,14 @@ public class MessageRepositoryImpl implements MessageRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
         return generatedKey;
     }
 
     @Override
-    public Integer saveVideoMessage(MessageEntity messageEntity, VideoMessageEntity videoMessageEntity) {
+    public Integer saveVideoMessage(MessageEntity messageEntity, VideoMessageEntity videoMessageEntity) throws SQLException {
         String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?)";
         String sqlDetail = "INSERT INTO messages_video(message_id,url,source) VALUES(?,?,?)";
         int generatedKey = 0;
@@ -286,7 +289,8 @@ public class MessageRepositoryImpl implements MessageRepository {
             connection.commit();
         } catch(SQLException e)
         {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw e;
         }
         finally
         {
@@ -298,7 +302,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             catch(SQLException e)
             {
                 // connection close failed.
-                System.err.println(e.getMessage());
+                log.error(e.getMessage(), e);
             }
         }
         return generatedKey;

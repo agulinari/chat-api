@@ -9,7 +9,12 @@ Routes and Filters passed as second parameters, you will find a TODO comment whe
 ```
 ./gradlew run
 ```
+### Build docker image
+./gradlew build
+docker build -t chat-api:1.0.0 .
 
+### Run docker image
+docker run -p 8080:8080 chat-api
 
 ##### Note
 You can remove/modify this file for documenting your solution.

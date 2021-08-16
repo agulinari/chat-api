@@ -1,13 +1,13 @@
 package com.asapp.backend.challenge.controller;
 
 import com.asapp.backend.challenge.controller.responses.ErrorResponse;
+import com.asapp.backend.challenge.controller.responses.GetMessagesResponse;
 import com.asapp.backend.challenge.controller.responses.SendMessageResponse;
 import com.asapp.backend.challenge.exceptions.InvalidFieldException;
 import com.asapp.backend.challenge.exceptions.InvalidUserException;
 import com.asapp.backend.challenge.exceptions.RequiredFieldException;
 import com.asapp.backend.challenge.resources.Content;
 import com.asapp.backend.challenge.resources.MessageResource;
-import com.asapp.backend.challenge.resources.TextContent;
 import com.asapp.backend.challenge.service.api.MessageService;
 import com.asapp.backend.challenge.service.impl.MessageServiceImpl;
 import com.asapp.backend.challenge.utils.HttpCodes;
@@ -15,9 +15,6 @@ import com.asapp.backend.challenge.utils.JSONUtil;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -80,7 +77,7 @@ public class MessagesController {
         String slimit = req.queryParams("limit");
 
         try {
-            
+
             validateGetMessagesRequest(srecipient, sstart);
             Integer recipient = Integer.valueOf(srecipient);
             Integer start = Integer.valueOf(sstart);
@@ -88,7 +85,7 @@ public class MessagesController {
 
             List<MessageResource<Content>> messages = messageService.getMessages(recipient, start, limit);
 
-            return JSONUtil.dataToJson(messages);
+            return JSONUtil.dataToJson(new GetMessagesResponse(messages));
 
         } catch (RequiredFieldException  | NumberFormatException fe) {
 

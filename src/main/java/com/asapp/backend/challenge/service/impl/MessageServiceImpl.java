@@ -12,10 +12,13 @@ import com.asapp.backend.challenge.persistence.repository.api.MessageRepository;
 import com.asapp.backend.challenge.persistence.repository.impl.MessageRepositoryImpl;
 import com.asapp.backend.challenge.resources.*;
 import com.asapp.backend.challenge.service.api.MessageService;
+import lombok.extern.slf4j.Slf4j;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
@@ -31,7 +34,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public SendMessageResponse sendMessage(MessageResource<Content> message) throws InvalidUserException {
+    public SendMessageResponse sendMessage(MessageResource<Content> message) throws InvalidUserException, SQLException {
 
         MessageEntity messageEntity = messageMapper.mapToEntity(message);
         Content content = message.getContent();
@@ -49,11 +52,12 @@ public class MessageServiceImpl implements MessageService {
         } else {
             throw new UnsupportedOperationException();
         }
+        log.info("Message sent from sender: {} to recipient: {}", messageEntity.getSender(), messageEntity.getRecipient());
         return new SendMessageResponse(id, messageEntity.getTimestamp());
     }
 
     @Override
-    public List<MessageResource<Content>> getMessages(Integer recipient, Integer start, Integer limit) {
+    public List<MessageResource<Content>> getMessages(Integer recipient, Integer start, Integer limit) throws SQLException {
 
         List<MessageEntity> messageEntities = this.messageRepository.getMessages(recipient, start, limit);
         List<MessageResource<Content>> messages = new ArrayList<>();
