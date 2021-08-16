@@ -26,7 +26,7 @@ public class JSONUtil {
         }
     }
 
-    public static <T>  T jsonToData(String json, Class<T> clazz) {
+    public static <T>  T jsonToData(String json, Class<T> clazz) throws IOException {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
@@ -35,11 +35,11 @@ public class JSONUtil {
             return mapper.readValue(json, clazz);
         } catch (IOException e) {
             log.error("IOEXception while mapping json (" + json + ") to Data", e);
-            throw new RuntimeException("IOEXception while mapping json (" + json + ") to Data");
+            throw e;
         }
     }
 
-    public static <T>  T jsonToData(String json, TypeReference typeReference) {
+    public static <T>  T jsonToData(String json, TypeReference typeReference) throws IOException {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
@@ -48,7 +48,7 @@ public class JSONUtil {
             return mapper.readValue(json, typeReference);
         } catch (IOException e) {
             log.error("IOEXception while mapping json (" + json + ") to Data", e);
-            throw new RuntimeException("IOEXception while mapping json (" + json + ") to Data");
+            throw e;
         }
     }
 }

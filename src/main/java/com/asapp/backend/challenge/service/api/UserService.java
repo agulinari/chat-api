@@ -6,7 +6,7 @@ import com.asapp.backend.challenge.resources.UserResource;
 
 public interface UserService {
 
-    UserResource createUser(String username, String password);
+    UserResource createUser(String username, String password) throws InvalidUserException;
 
     LoginResource login(String username, String password) throws InvalidUserException;
 

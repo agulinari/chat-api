@@ -1,9 +1,11 @@
 package com.asapp.backend.challenge.persistence.repository.impl;
 
+import com.asapp.backend.challenge.exceptions.InvalidUserException;
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
 import com.asapp.backend.challenge.persistence.repository.api.MessageRepository;
+import com.asapp.backend.challenge.utils.DatabaseUtil;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -14,13 +16,14 @@ import java.util.Optional;
 
 public class MessageRepositoryImpl implements MessageRepository {
 
+
     @Override
     public List<MessageEntity> getMessages(Integer recipient, Integer start, Integer limit) {
         String sql = "SELECT id, timestamp, sender, recipient, type, text FROM messages WHERE recipient = ? and id >= ? LIMIT ?";
         Connection connection = null;
         List<MessageEntity> messages = new ArrayList<>();
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 
@@ -45,8 +48,6 @@ public class MessageRepositoryImpl implements MessageRepository {
 
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         }
         finally
@@ -73,7 +74,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 
@@ -91,8 +92,6 @@ public class MessageRepositoryImpl implements MessageRepository {
 
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         }
         finally
@@ -119,7 +118,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 
@@ -136,8 +135,6 @@ public class MessageRepositoryImpl implements MessageRepository {
 
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         }
         finally
@@ -158,14 +155,14 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Integer saveMessage(MessageEntity messageEntity) {
+    public Integer saveMessage(MessageEntity messageEntity) throws InvalidUserException {
 
         String sql = "INSERT INTO messages(timestamp,sender,recipient,type,text) VALUES(?,?,?,?,?)";
         int generatedKey = 0;
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -183,9 +180,10 @@ public class MessageRepositoryImpl implements MessageRepository {
             connection.commit();
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
+
             System.err.println(e.getMessage());
+            throw new InvalidUserException();
+
         }
         finally
         {
@@ -213,7 +211,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -238,8 +236,6 @@ public class MessageRepositoryImpl implements MessageRepository {
             connection.commit();
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         }
         finally
@@ -266,7 +262,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -290,8 +286,6 @@ public class MessageRepositoryImpl implements MessageRepository {
             connection.commit();
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         }
         finally

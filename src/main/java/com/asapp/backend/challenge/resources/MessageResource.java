@@ -18,4 +18,5 @@ public class MessageResource<T extends Content> {
     private Integer sender;
     private Integer recipient;
     private T content;
+
 }

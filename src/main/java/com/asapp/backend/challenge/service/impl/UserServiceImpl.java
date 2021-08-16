@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResource createUser(String username, String password) {
+    public UserResource createUser(String username, String password) throws InvalidUserException {
         UserEntity userEntity = userRepository.createUser(username, password);
         return userMapper.mapToDomain(userEntity);
     }

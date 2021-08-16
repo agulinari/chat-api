@@ -7,6 +7,8 @@ import java.sql.Statement;
 
 public class DatabaseUtil {
 
+    public static final String JDCB_URL = "jdbc:sqlite:C:/proyectos/db/mydatabase.db";
+
     public static void init() {
 
         String sqlUsers = "CREATE TABLE IF NOT EXISTS users (\n"
@@ -52,7 +54,7 @@ public class DatabaseUtil {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(JDCB_URL);
             Statement stmt = connection.createStatement();
             // create a user table
             stmt.execute(sqlUsers);

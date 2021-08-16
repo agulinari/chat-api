@@ -1,7 +1,9 @@
 package com.asapp.backend.challenge.persistence.repository.impl;
 
+import com.asapp.backend.challenge.exceptions.InvalidUserException;
 import com.asapp.backend.challenge.persistence.entities.UserEntity;
 import com.asapp.backend.challenge.persistence.repository.api.UserRepository;
+import com.asapp.backend.challenge.utils.DatabaseUtil;
 
 import java.sql.*;
 import java.util.Optional;
@@ -10,16 +12,16 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     @Override
-    public UserEntity createUser(String username, String password) {
+    public UserEntity createUser(String username, String password) throws InvalidUserException {
 
         String sql = "INSERT INTO users(username,password) VALUES(?,?)";
         int generatedKey = 0;
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
-            connection.setAutoCommit(false); // Starts transaction.
+            connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, username);
             pstmt.setString(2, password);
@@ -29,12 +31,11 @@ public class UserRepositoryImpl implements UserRepository {
             if (generatedKeys.next()) {
                 generatedKey = generatedKeys.getInt(1);
             }
-            connection.commit(); // Commits transaction.
+            connection.commit();
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
+            throw new InvalidUserException();
         }
         finally
         {
@@ -61,7 +62,7 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:C:/proyectos/db/mydatabase.db");
+            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 
@@ -79,8 +80,6 @@ public class UserRepositoryImpl implements UserRepository {
 
         } catch(SQLException e)
         {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         }
         finally

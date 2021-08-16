@@ -1,5 +1,8 @@
 package com.asapp.backend.challenge.resources;
 
+import com.asapp.backend.challenge.exceptions.InvalidFieldException;
+import com.asapp.backend.challenge.exceptions.RequiredFieldException;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -11,9 +14,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public abstract class Content {
 
     public abstract String getType();
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getText() {
         return null;
     }
+
+    public abstract void validate() throws RequiredFieldException, InvalidFieldException;
 
 }

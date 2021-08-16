@@ -1,6 +1,7 @@
 package com.asapp.backend.challenge.service.impl;
 
 import com.asapp.backend.challenge.controller.responses.SendMessageResponse;
+import com.asapp.backend.challenge.exceptions.InvalidUserException;
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
@@ -30,7 +31,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public SendMessageResponse sendMessage(MessageResource<Content> message) {
+    public SendMessageResponse sendMessage(MessageResource<Content> message) throws InvalidUserException {
 
         MessageEntity messageEntity = messageMapper.mapToEntity(message);
         Content content = message.getContent();
