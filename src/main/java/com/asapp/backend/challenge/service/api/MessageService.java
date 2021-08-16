@@ -1,14 +1,14 @@
 package com.asapp.backend.challenge.service.api;
 
-import com.asapp.backend.challenge.controller.requests.MessageRequest;
 import com.asapp.backend.challenge.controller.responses.SendMessageResponse;
 import com.asapp.backend.challenge.resources.Content;
 import com.asapp.backend.challenge.resources.MessageResource;
+
 import java.util.List;
 
 public interface MessageService {
 
-    SendMessageResponse sendMessage(MessageRequest message);
+    SendMessageResponse sendMessage(MessageResource<Content> message);
 
     List<MessageResource<Content>> getMessages(Integer recipient, Integer start, Integer limit);
 }
