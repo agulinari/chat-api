@@ -24,9 +24,9 @@ public class MessagesController {
     };
 
     public static Route getMessages = (Request req, Response rep) -> {
-        Integer recipient = Integer.valueOf(req.params("recipient"));
-        Integer start = Integer.valueOf(req.params("start"));
-        Integer limit = Integer.valueOf(req.params("limit"));
+        Integer recipient = Integer.valueOf(req.queryParams("recipient"));
+        Integer start = Integer.valueOf(req.queryParams("start"));
+        Integer limit = Integer.valueOf(req.queryParams("limit"));
         List<MessageResource<Content>> messages = messageService.getMessages(recipient, start, limit);
 
         return JSONUtil.dataToJson(messages);

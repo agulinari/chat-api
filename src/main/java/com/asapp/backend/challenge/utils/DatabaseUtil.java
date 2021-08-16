@@ -32,7 +32,7 @@ public class DatabaseUtil {
                 + "	url TEXT NOT NULL, \n"
                 + "	height integer NOT NULL, \n"
                 + "	width integer NOT NULL, \n"
-                + " FOREIGN KEY(message_id) REFERENCES messages(id), \n"
+                + " FOREIGN KEY(message_id) REFERENCES messages(id) \n"
                 + ");";
 
         String sqlVideos = "CREATE TABLE IF NOT EXISTS messages_video (\n"
@@ -40,7 +40,7 @@ public class DatabaseUtil {
                 + "	message_id integer NOT NULL,\n"
                 + "	url TEXT NOT NULL, \n"
                 + "	source TEXT NOT NULL, \n"
-                + " FOREIGN KEY(message_id) REFERENCES messages(id), \n"
+                + " FOREIGN KEY(message_id) REFERENCES messages(id) \n"
                 + ");";
 
         String sqlUsernameIndex = "CREATE UNIQUE INDEX IF NOT EXISTS username_index \n" +

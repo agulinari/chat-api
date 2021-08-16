@@ -2,7 +2,6 @@ package com.asapp.backend.challenge.persistence.repository.impl;
 
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.persistence.entities.MessageEntity;
-import com.asapp.backend.challenge.persistence.entities.UserEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
 import com.asapp.backend.challenge.persistence.repository.api.MessageRepository;
 
@@ -17,8 +16,7 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<MessageEntity> getMessages(Integer recipient, Integer start, Integer limit) {
-        String sql = "SELECT id, url, height, width FROM messages WHERE recipient = ? and id >= ? LIMIT ?";
-        UserEntity userEntity = null;
+        String sql = "SELECT id, timestamp, sender, recipient, type, text FROM messages WHERE recipient = ? and id >= ? LIMIT ?";
         Connection connection = null;
         List<MessageEntity> messages = new ArrayList<>();
         try {
@@ -209,7 +207,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Integer saveImageMessage(MessageEntity messageEntity, ImageMessageEntity imageMessageEntity) {
 
-        String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?)";
         String sqlDetail = "INSERT INTO messages_image(message_id,url,height,width) VALUES(?,?,?,?)";
         int generatedKey = 0;
         Connection connection = null;
@@ -223,7 +221,6 @@ public class MessageRepositoryImpl implements MessageRepository {
             pstmt.setInt(2, messageEntity.getSender());
             pstmt.setInt(3, messageEntity.getRecipient());
             pstmt.setString(4, messageEntity.getType());
-            pstmt.setString(5, messageEntity.getText());
             pstmt.executeUpdate();
             Statement statement = connection.createStatement();
             ResultSet generatedKeys = statement.executeQuery("SELECT last_insert_rowid()");
@@ -263,7 +260,7 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Integer saveVideoMessage(MessageEntity messageEntity, VideoMessageEntity videoMessageEntity) {
-        String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?)";
         String sqlDetail = "INSERT INTO messages_video(message_id,url,source) VALUES(?,?,?)";
         int generatedKey = 0;
         Connection connection = null;
@@ -277,7 +274,6 @@ public class MessageRepositoryImpl implements MessageRepository {
             pstmt.setInt(2, messageEntity.getSender());
             pstmt.setInt(3, messageEntity.getRecipient());
             pstmt.setString(4, messageEntity.getType());
-            pstmt.setString(5, messageEntity.getText());
             pstmt.executeUpdate();
             Statement statement = connection.createStatement();
             ResultSet generatedKeys = statement.executeQuery("SELECT last_insert_rowid()");
