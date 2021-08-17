@@ -27,6 +27,12 @@ public class UserServiceImpl implements UserService {
         this.userMapper = new UserMapper();
     }
 
+    public UserServiceImpl(TokenService tokenService, UserRepository userRepository) {
+        this.tokenService = tokenService;
+        this.userRepository = userRepository;
+        this.userMapper = new UserMapper();
+    }
+
     @Override
     public UserResource createUser(String username, String password) throws InvalidUserException {
         UserEntity userEntity = userRepository.createUser(username, password);

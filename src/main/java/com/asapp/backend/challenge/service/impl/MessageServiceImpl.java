@@ -33,6 +33,13 @@ public class MessageServiceImpl implements MessageService {
         this.videoContentMapper = new VideoContentMapper();
     }
 
+    public MessageServiceImpl(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+        this.messageMapper = new MessageMapper();
+        this.imageContentMapper = new ImageContentMapper();
+        this.videoContentMapper = new VideoContentMapper();
+    }
+
     @Override
     public SendMessageResponse sendMessage(MessageResource<Content> message) throws InvalidUserException, SQLException {
 
