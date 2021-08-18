@@ -20,6 +20,8 @@ public class UsersController {
 
     public static Route createUser = (Request req, Response resp) -> {
 
+        resp.header("Content-Type", "application/json");
+
         try {
 
             UserResource createUserRequest = JSONUtil.jsonToData(req.body(), UserResource.class);

@@ -2,6 +2,7 @@ package com.asapp.backend.challenge.persistence.mappers;
 
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
 import com.asapp.backend.challenge.resources.VideoContent;
+import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 
 public class VideoContentMapper implements RepositoryMapper<VideoMessageEntity, VideoContent> {
 
@@ -16,7 +17,7 @@ public class VideoContentMapper implements RepositoryMapper<VideoMessageEntity, 
     @Override
     public VideoContent mapToDomain(final VideoMessageEntity entityObject) {
         VideoContent domainObject = new VideoContent();
-        domainObject.setType("video");
+        domainObject.setType(ContentTypeEnum.VIDEO.getValue());
         domainObject.setUrl(entityObject.getUrl());
         domainObject.setSource(entityObject.getSource());
         return domainObject;

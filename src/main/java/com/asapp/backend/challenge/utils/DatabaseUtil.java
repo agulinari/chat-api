@@ -11,6 +11,7 @@ import java.sql.Statement;
 public class DatabaseUtil {
 
     public static final String JDCB_URL = "jdbc:sqlite:/var/lib/mydatabase.db";
+    private static boolean initialized = false;
 
     public static void init() {
 
@@ -70,6 +71,7 @@ public class DatabaseUtil {
             // create indexes
             stmt.execute(sqlUsernameIndex);
             stmt.execute(sqlRecipientIndex);
+            initialized = true;
         } catch(SQLException e)
         {
             log.error(e.getMessage(), e);
@@ -89,4 +91,23 @@ public class DatabaseUtil {
         }
     }
 
+    public static boolean test() {
+        Connection conn = null;
+        boolean ok = false;
+        try {
+            conn = DriverManager.getConnection(JDCB_URL);
+            ok = true;
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                log.error(ex.getMessage(), ex);
+            }
+        }
+        return (ok && initialized);
+    }
 }

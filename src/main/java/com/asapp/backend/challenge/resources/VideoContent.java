@@ -2,6 +2,8 @@ package com.asapp.backend.challenge.resources;
 
 import com.asapp.backend.challenge.exceptions.InvalidFieldException;
 import com.asapp.backend.challenge.exceptions.RequiredFieldException;
+import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
+import com.asapp.backend.challenge.resources.enums.SourceEnum;
 import com.asapp.backend.challenge.utils.RegexUtil;
 import lombok.Data;
 
@@ -14,7 +16,7 @@ public class VideoContent extends Content {
 
     @Override
     public void validate() throws RequiredFieldException, InvalidFieldException {
-        if (!type.equals("video")) {
+        if (!ContentTypeEnum.VIDEO.getValue().equals(type)) {
             throw new InvalidFieldException("type");
         }
         if (url == null || url.trim().isEmpty()) {

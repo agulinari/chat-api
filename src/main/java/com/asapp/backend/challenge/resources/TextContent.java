@@ -2,6 +2,7 @@ package com.asapp.backend.challenge.resources;
 
 import com.asapp.backend.challenge.exceptions.InvalidFieldException;
 import com.asapp.backend.challenge.exceptions.RequiredFieldException;
+import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 import lombok.Data;
 
 @Data
@@ -12,7 +13,7 @@ public class TextContent extends Content {
 
     @Override
     public void validate() throws RequiredFieldException, InvalidFieldException {
-        if (!type.equals("text")) {
+        if (!ContentTypeEnum.TEXT.getValue().equals(type)) {
             throw new InvalidFieldException("type");
         }
         if (text == null || text.trim().isEmpty()) {

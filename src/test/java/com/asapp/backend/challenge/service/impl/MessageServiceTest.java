@@ -79,9 +79,9 @@ public class MessageServiceTest {
 
         int messageId = 3;
         VideoContent content = new VideoContent();
-        content.setType("image");
+        content.setType("video");
         content.setUrl("http://youtube.com/watch?v=video");
-        content.setSource("video");
+        content.setSource("youtube");
         MessageResource<Content> messageResource = new MessageResource<>();
         messageResource.setSender(1);
         messageResource.setRecipient(1);

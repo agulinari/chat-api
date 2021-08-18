@@ -1,4 +1,4 @@
-package com.asapp.backend.challenge.resources;
+package com.asapp.backend.challenge.resources.enums;
 
 public enum SourceEnum {
 

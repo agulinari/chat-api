@@ -2,6 +2,7 @@ package com.asapp.backend.challenge.resources;
 
 import com.asapp.backend.challenge.exceptions.InvalidFieldException;
 import com.asapp.backend.challenge.exceptions.RequiredFieldException;
+import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 import com.asapp.backend.challenge.utils.RegexUtil;
 import lombok.Data;
 
@@ -15,7 +16,7 @@ public class ImageContent  extends Content {
 
     @Override
     public void validate() throws RequiredFieldException, InvalidFieldException {
-        if (!type.equals("image")) {
+        if (!ContentTypeEnum.IMAGE.getValue().equals(type)) {
             throw new InvalidFieldException("type");
         }
         if (url == null || url.trim().isEmpty()) {

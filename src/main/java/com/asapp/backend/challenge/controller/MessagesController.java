@@ -26,6 +26,9 @@ public class MessagesController {
     private static final MessageService messageService = new MessageServiceImpl();
 
     public static Route sendMessage = (Request req, Response resp) -> {
+
+        resp.header("Content-Type", "application/json");
+
         try {
 
             MessageResource<Content> message = JSONUtil.jsonToData(req.body(), new TypeReference<MessageResource<Content>>() {
@@ -72,6 +75,9 @@ public class MessagesController {
     }
 
     public static Route getMessages = (Request req, Response resp) -> {
+
+        resp.header("Content-Type", "application/json");
+
         String srecipient = req.queryParams("recipient");
         String sstart = req.queryParams("start");
         String slimit = req.queryParams("limit");

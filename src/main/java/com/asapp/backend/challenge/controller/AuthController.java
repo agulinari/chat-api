@@ -22,7 +22,7 @@ public class AuthController {
 
 
     public static Route login = (Request req, Response resp) -> {
-
+        resp.header("Content-Type", "application/json");
         try {
 
             UserResource userRequest = JSONUtil.jsonToData(req.body(), UserResource.class);

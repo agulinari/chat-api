@@ -11,6 +11,7 @@ import com.asapp.backend.challenge.persistence.mappers.VideoContentMapper;
 import com.asapp.backend.challenge.persistence.repository.api.MessageRepository;
 import com.asapp.backend.challenge.persistence.repository.impl.MessageRepositoryImpl;
 import com.asapp.backend.challenge.resources.*;
+import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 import com.asapp.backend.challenge.service.api.MessageService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,13 +47,13 @@ public class MessageServiceImpl implements MessageService {
         MessageEntity messageEntity = messageMapper.mapToEntity(message);
         Content content = message.getContent();
         Integer id;
-        if (content instanceof TextContent) {
+        if (ContentTypeEnum.TEXT.getValue().equals(content.getType())) {
             id = this.messageRepository.saveMessage(messageEntity);
-        } else if (content instanceof ImageContent) {
+        } else if (ContentTypeEnum.IMAGE.getValue().equals(content.getType())) {
             ImageContent imageContent = (ImageContent) content;
             ImageMessageEntity imageMessageEntity = imageContentMapper.mapToEntity(imageContent);
             id = this.messageRepository.saveImageMessage(messageEntity, imageMessageEntity);
-        } else if (content instanceof VideoContent) {
+        } else if (ContentTypeEnum.VIDEO.getValue().equals(content.getType())) {
             VideoContent videoContent = (VideoContent) content;
             VideoMessageEntity videoMessageEntity = videoContentMapper.mapToEntity(videoContent);
             id = this.messageRepository.saveVideoMessage(messageEntity, videoMessageEntity);
@@ -70,12 +71,12 @@ public class MessageServiceImpl implements MessageService {
         List<MessageResource<Content>> messages = new ArrayList<>();
         for (MessageEntity messageEntity : messageEntities) {
             MessageResource<Content> messageResource = messageMapper.mapToDomain(messageEntity);
-            if (messageEntity.getType().equals("image")) {
+            if (messageEntity.getType().equals(ContentTypeEnum.IMAGE.getValue())) {
                 ImageMessageEntity imageEntity = this.messageRepository.getImageMessage(messageEntity.getId()).get();
                 ImageContent imageContent = this.imageContentMapper.mapToDomain(imageEntity);
                 messageResource.setContent(imageContent);
             }
-            if (messageEntity.getType().equals("video")) {
+            if (messageEntity.getType().equals(ContentTypeEnum.VIDEO.getValue())) {
                 VideoMessageEntity videoEntity = this.messageRepository.getVideoMessage(messageEntity.getId()).get();
                 VideoContent videoContent = this.videoContentMapper.mapToDomain(videoEntity);
                 messageResource.setContent(videoContent);

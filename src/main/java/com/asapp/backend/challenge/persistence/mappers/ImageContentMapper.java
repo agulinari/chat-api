@@ -2,6 +2,7 @@ package com.asapp.backend.challenge.persistence.mappers;
 
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.resources.ImageContent;
+import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 
 public class ImageContentMapper implements RepositoryMapper<ImageMessageEntity, ImageContent> {
 
@@ -17,7 +18,7 @@ public class ImageContentMapper implements RepositoryMapper<ImageMessageEntity, 
     @Override
     public ImageContent mapToDomain(final ImageMessageEntity entityObject) {
         ImageContent domainObject = new ImageContent();
-        domainObject.setType("image");
+        domainObject.setType(ContentTypeEnum.IMAGE.getValue());
         domainObject.setUrl(entityObject.getUrl());
         domainObject.setHeight(entityObject.getHeight());
         domainObject.setWidth(entityObject.getWidth());
