@@ -4,7 +4,7 @@ import com.asapp.backend.challenge.controller.responses.ErrorResponse;
 import com.asapp.backend.challenge.controller.responses.GetMessagesResponse;
 import com.asapp.backend.challenge.controller.responses.SendMessageResponse;
 import com.asapp.backend.challenge.exceptions.InvalidFieldException;
-import com.asapp.backend.challenge.exceptions.InvalidUserException;
+import com.asapp.backend.challenge.exceptions.InvalidMessageException;
 import com.asapp.backend.challenge.exceptions.RequiredFieldException;
 import com.asapp.backend.challenge.resources.Content;
 import com.asapp.backend.challenge.resources.MessageResource;
@@ -42,7 +42,7 @@ public class MessagesController {
             resp.status(HttpCodes.HTTP_BAD_REQUEST);
             return JSONUtil.dataToJson(new ErrorResponse("Malformed request"));
 
-        } catch (InvalidUserException iue) {
+        } catch (InvalidMessageException iue) {
 
             resp.status(HttpCodes.HTTP_CONFLICT);
             return JSONUtil.dataToJson(new ErrorResponse("Invalid sender or recipient"));
@@ -106,7 +106,7 @@ public class MessagesController {
         }
     };
 
-    private static void validateGetMessagesRequest(String srecipient, String sstart) throws RequiredFieldException, InvalidFieldException {
+    private static void validateGetMessagesRequest(String srecipient, String sstart) throws RequiredFieldException {
 
         if (srecipient == null) {
             throw new RequiredFieldException("recipient");

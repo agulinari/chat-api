@@ -10,7 +10,6 @@ import java.sql.Statement;
 @Slf4j
 public class DatabaseUtil {
 
-    public static final String JDCB_URL = "jdbc:sqlite:/var/lib/mydatabase.db";
     private static boolean initialized = false;
 
     public static void init() {
@@ -58,7 +57,7 @@ public class DatabaseUtil {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection(JDCB_URL);
+            connection = DriverManager.getConnection(PropertiesUtil.properties.getProperty("database.url"));
             Statement stmt = connection.createStatement();
             // create a user table
             stmt.execute(sqlUsers);
@@ -95,7 +94,7 @@ public class DatabaseUtil {
         Connection conn = null;
         boolean ok = false;
         try {
-            conn = DriverManager.getConnection(JDCB_URL);
+            conn = DriverManager.getConnection(PropertiesUtil.properties.getProperty("database.url"));
             ok = true;
         } catch (SQLException e) {
             log.error(e.getMessage(), e);

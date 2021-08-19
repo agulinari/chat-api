@@ -5,8 +5,10 @@ import com.asapp.backend.challenge.exceptions.RequiredFieldException;
 import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 import com.asapp.backend.challenge.utils.RegexUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ImageContent  extends Content {
 
     private String type;

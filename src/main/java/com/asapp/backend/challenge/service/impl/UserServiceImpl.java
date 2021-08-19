@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = oUserEntity.get();
         String token = tokenService.generateToken();
 
-        LoginResource loginResource = new LoginResource(userEntity.getId(), token);
-        return loginResource;
+        return new LoginResource(userEntity.getId(), token);
     }
 }

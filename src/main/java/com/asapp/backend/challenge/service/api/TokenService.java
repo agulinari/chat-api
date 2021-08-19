@@ -1,5 +1,7 @@
 package com.asapp.backend.challenge.service.api;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+
 public interface TokenService {
 
     /**
@@ -10,9 +12,9 @@ public interface TokenService {
 
     /**
      * Validate JWT Token
-     * @param token
-     * @return  true if token is valid, otherwise false
+     * @param token JWT Token to validate
+     * @throws JWTVerificationException if token is invalid
      */
-    boolean validateToken(String token);
+    void validateToken(String token)  throws JWTVerificationException;
 
 }

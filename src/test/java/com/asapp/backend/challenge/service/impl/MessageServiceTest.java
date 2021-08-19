@@ -1,7 +1,7 @@
 package com.asapp.backend.challenge.service.impl;
 
 import com.asapp.backend.challenge.controller.responses.SendMessageResponse;
-import com.asapp.backend.challenge.exceptions.InvalidUserException;
+import com.asapp.backend.challenge.exceptions.InvalidMessageException;
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
@@ -31,7 +31,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testSendTextMessageOk() throws InvalidUserException, SQLException {
+    public void testSendTextMessageOk() throws InvalidMessageException, SQLException {
 
         int messageId = 1;
         TextContent content = new TextContent();
@@ -52,7 +52,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testSendImageMessageOk() throws InvalidUserException, SQLException {
+    public void testSendImageMessageOk() throws InvalidMessageException, SQLException {
 
         int messageId = 2;
         ImageContent content = new ImageContent();
@@ -75,7 +75,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testSendVideoMessageOk() throws InvalidUserException, SQLException {
+    public void testSendVideoMessageOk() throws InvalidMessageException, SQLException {
 
         int messageId = 3;
         VideoContent content = new VideoContent();
@@ -96,8 +96,8 @@ public class MessageServiceTest {
         assertEquals(response.getId().intValue(), messageId);
     }
 
-    @Test(expected = InvalidUserException.class)
-    public void testInvalidUser() throws SQLException, InvalidUserException {
+    @Test(expected = InvalidMessageException.class)
+    public void testInvalidUser() throws SQLException, InvalidMessageException {
 
         TextContent content = new TextContent();
         content.setType("text");
@@ -107,7 +107,7 @@ public class MessageServiceTest {
         messageResource.setRecipient(1);
         messageResource.setContent(content);
 
-        when(messageRepository.saveMessage(any(MessageEntity.class))).thenThrow(new InvalidUserException());
+        when(messageRepository.saveMessage(any(MessageEntity.class))).thenThrow(new InvalidMessageException());
 
         messageService.sendMessage(messageResource);
 

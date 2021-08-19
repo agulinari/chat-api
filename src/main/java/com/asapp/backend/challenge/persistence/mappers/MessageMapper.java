@@ -4,6 +4,7 @@ import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.resources.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 public class MessageMapper implements RepositoryMapper<MessageEntity, MessageResource<Content>> {
 
@@ -12,7 +13,7 @@ public class MessageMapper implements RepositoryMapper<MessageEntity, MessageRes
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setRecipient(domainObject.getRecipient());
         messageEntity.setSender(domainObject.getSender());
-        messageEntity.setTimestamp(LocalDateTime.now());
+        messageEntity.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
         Content content = domainObject.getContent();
         messageEntity.setType(content.getType());
         messageEntity.setText(content.getText());

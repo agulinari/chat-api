@@ -4,8 +4,10 @@ import com.asapp.backend.challenge.exceptions.InvalidFieldException;
 import com.asapp.backend.challenge.exceptions.RequiredFieldException;
 import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class TextContent extends Content {
 
     private String type;

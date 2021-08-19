@@ -1,11 +1,11 @@
 package com.asapp.backend.challenge.persistence.repository.impl;
 
-import com.asapp.backend.challenge.exceptions.InvalidUserException;
+import com.asapp.backend.challenge.exceptions.InvalidMessageException;
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
 import com.asapp.backend.challenge.persistence.repository.api.MessageRepository;
-import com.asapp.backend.challenge.utils.DatabaseUtil;
+import com.asapp.backend.challenge.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -18,13 +18,19 @@ import java.util.Optional;
 @Slf4j
 public class MessageRepositoryImpl implements MessageRepository {
 
+    private final String JDBC_URL;
+
+    public MessageRepositoryImpl() {
+        this.JDBC_URL = PropertiesUtil.properties.getProperty("database.url");
+    }
+
     @Override
     public List<MessageEntity> getMessages(Integer recipient, Integer start, Integer limit) throws SQLException {
         String sql = "SELECT id, timestamp, sender, recipient, type, text FROM messages WHERE recipient = ? and id >= ? LIMIT ?";
         Connection connection = null;
         List<MessageEntity> messages = new ArrayList<>();
         try {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 
@@ -76,7 +82,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 
@@ -121,7 +127,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 
@@ -159,14 +165,14 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Integer saveMessage(MessageEntity messageEntity) throws InvalidUserException {
+    public Integer saveMessage(MessageEntity messageEntity) throws InvalidMessageException, SQLException {
 
         String sql = "INSERT INTO messages(timestamp,sender,recipient,type,text) VALUES(?,?,?,?,?)";
         int generatedKey = 0;
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -180,12 +186,15 @@ public class MessageRepositoryImpl implements MessageRepository {
             ResultSet generatedKeys = statement.executeQuery("SELECT last_insert_rowid()");
             if (generatedKeys.next()) {
                 generatedKey = generatedKeys.getInt(1);
+                if (generatedKey == 0) {
+                    throw new InvalidMessageException();
+                }
             }
             connection.commit();
-        } catch(SQLException e)
+        } catch(SQLException | InvalidMessageException e)
         {
             log.error(e.getMessage(), e);
-            throw new InvalidUserException();
+            throw e;
         }
         finally
         {
@@ -205,7 +214,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Integer saveImageMessage(MessageEntity messageEntity, ImageMessageEntity imageMessageEntity) throws SQLException {
+    public Integer saveImageMessage(MessageEntity messageEntity, ImageMessageEntity imageMessageEntity) throws SQLException, InvalidMessageException {
 
         String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?)";
         String sqlDetail = "INSERT INTO messages_image(message_id,url,height,width) VALUES(?,?,?,?)";
@@ -213,7 +222,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -226,17 +235,20 @@ public class MessageRepositoryImpl implements MessageRepository {
             ResultSet generatedKeys = statement.executeQuery("SELECT last_insert_rowid()");
             if (generatedKeys.next()) {
                 generatedKey = generatedKeys.getInt(1);
-                //TODO: validate generatedKey is not 0
+                if (generatedKey == 0) {
+                    throw new InvalidMessageException();
+                }
                 PreparedStatement ps = connection.prepareStatement(sqlDetail);
                 ps.setInt(1, generatedKey);
                 ps.setString(2, imageMessageEntity.getUrl());
                 ps.setInt(3, imageMessageEntity.getHeight());
                 ps.setInt(4, imageMessageEntity.getWidth());
                 ps.executeUpdate();
+
             }
 
             connection.commit();
-        } catch(SQLException e)
+        } catch(SQLException | InvalidMessageException e)
         {
             log.error(e.getMessage(), e);
             throw e;
@@ -258,14 +270,14 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Integer saveVideoMessage(MessageEntity messageEntity, VideoMessageEntity videoMessageEntity) throws SQLException {
+    public Integer saveVideoMessage(MessageEntity messageEntity, VideoMessageEntity videoMessageEntity) throws SQLException, InvalidMessageException {
         String sql = "INSERT INTO messages(timestamp,sender,recipient,type) VALUES(?,?,?,?)";
         String sqlDetail = "INSERT INTO messages_video(message_id,url,source) VALUES(?,?,?)";
         int generatedKey = 0;
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -278,7 +290,9 @@ public class MessageRepositoryImpl implements MessageRepository {
             ResultSet generatedKeys = statement.executeQuery("SELECT last_insert_rowid()");
             if (generatedKeys.next()) {
                 generatedKey = generatedKeys.getInt(1);
-                //TODO: validate generatedKey is not 0
+                if (generatedKey == 0) {
+                    throw new InvalidMessageException();
+                }
                 PreparedStatement ps = connection.prepareStatement(sqlDetail);
                 ps.setInt(1, generatedKey);
                 ps.setString(2, videoMessageEntity.getUrl());
@@ -287,7 +301,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             }
 
             connection.commit();
-        } catch(SQLException e)
+        } catch(SQLException | InvalidMessageException e)
         {
             log.error(e.getMessage(), e);
             throw e;

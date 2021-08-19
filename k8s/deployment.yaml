@@ -20,3 +20,4 @@ spec:
           image: agulinari/chat-api:1.0.0
           ports:
             - containerPort: 8080
+          imagePullPolicy: Always

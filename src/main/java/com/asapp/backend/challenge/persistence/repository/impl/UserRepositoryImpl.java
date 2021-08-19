@@ -3,7 +3,7 @@ package com.asapp.backend.challenge.persistence.repository.impl;
 import com.asapp.backend.challenge.exceptions.InvalidUserException;
 import com.asapp.backend.challenge.persistence.entities.UserEntity;
 import com.asapp.backend.challenge.persistence.repository.api.UserRepository;
-import com.asapp.backend.challenge.utils.DatabaseUtil;
+import com.asapp.backend.challenge.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -12,6 +12,11 @@ import java.util.Optional;
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
+    private final String JDBC_URL;
+
+    public UserRepositoryImpl() {
+        this.JDBC_URL = PropertiesUtil.properties.getProperty("database.url");
+    }
 
     @Override
     public UserEntity createUser(String username, String password) throws InvalidUserException {
@@ -21,7 +26,7 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = null;
         try
         {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -64,7 +69,7 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection(DatabaseUtil.JDCB_URL);
+            connection = DriverManager.getConnection(JDBC_URL);
 
             PreparedStatement pstmt  = connection.prepareStatement(sql);
 

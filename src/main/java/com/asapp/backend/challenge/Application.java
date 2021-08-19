@@ -7,11 +7,19 @@ import com.asapp.backend.challenge.controller.UsersController;
 import com.asapp.backend.challenge.filter.TokenValidatorFilter;
 import com.asapp.backend.challenge.utils.DatabaseUtil;
 import com.asapp.backend.challenge.utils.Path;
+import com.asapp.backend.challenge.utils.PropertiesUtil;
 import spark.Spark;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class Application {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        PropertiesUtil.loadProperties();
 
         DatabaseUtil.init();
 
@@ -29,8 +37,6 @@ public class Application {
         Spark.get(Path.MESSAGES, MessagesController.getMessages);
         // Health
         Spark.post(Path.HEALTH, HealthController.check);
-
-
 
     }
 

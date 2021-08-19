@@ -1,6 +1,6 @@
 package com.asapp.backend.challenge.persistence.repository.api;
 
-import com.asapp.backend.challenge.exceptions.InvalidUserException;
+import com.asapp.backend.challenge.exceptions.InvalidMessageException;
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
@@ -17,10 +17,10 @@ public interface MessageRepository {
 
     Optional<VideoMessageEntity> getVideoMessage(Integer messageId) throws SQLException;
 
-    Integer saveMessage(MessageEntity messageEntity) throws InvalidUserException;
+    Integer saveMessage(MessageEntity messageEntity) throws InvalidMessageException, SQLException;
 
-    Integer saveImageMessage(MessageEntity messageEntity, ImageMessageEntity imageMessageEntity) throws SQLException;
+    Integer saveImageMessage(MessageEntity messageEntity, ImageMessageEntity imageMessageEntity) throws SQLException, InvalidMessageException;
 
-    Integer saveVideoMessage(MessageEntity messageEntity, VideoMessageEntity videoMessageEntity) throws SQLException;
+    Integer saveVideoMessage(MessageEntity messageEntity, VideoMessageEntity videoMessageEntity) throws SQLException, InvalidMessageException;
 
 }

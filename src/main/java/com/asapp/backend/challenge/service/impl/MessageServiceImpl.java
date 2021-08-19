@@ -1,7 +1,7 @@
 package com.asapp.backend.challenge.service.impl;
 
 import com.asapp.backend.challenge.controller.responses.SendMessageResponse;
-import com.asapp.backend.challenge.exceptions.InvalidUserException;
+import com.asapp.backend.challenge.exceptions.InvalidMessageException;
 import com.asapp.backend.challenge.persistence.entities.ImageMessageEntity;
 import com.asapp.backend.challenge.persistence.entities.MessageEntity;
 import com.asapp.backend.challenge.persistence.entities.VideoMessageEntity;
@@ -10,7 +10,10 @@ import com.asapp.backend.challenge.persistence.mappers.MessageMapper;
 import com.asapp.backend.challenge.persistence.mappers.VideoContentMapper;
 import com.asapp.backend.challenge.persistence.repository.api.MessageRepository;
 import com.asapp.backend.challenge.persistence.repository.impl.MessageRepositoryImpl;
-import com.asapp.backend.challenge.resources.*;
+import com.asapp.backend.challenge.resources.Content;
+import com.asapp.backend.challenge.resources.ImageContent;
+import com.asapp.backend.challenge.resources.MessageResource;
+import com.asapp.backend.challenge.resources.VideoContent;
 import com.asapp.backend.challenge.resources.enums.ContentTypeEnum;
 import com.asapp.backend.challenge.service.api.MessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +45,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public SendMessageResponse sendMessage(MessageResource<Content> message) throws InvalidUserException, SQLException {
+    public SendMessageResponse sendMessage(MessageResource<Content> message) throws InvalidMessageException, SQLException {
 
         MessageEntity messageEntity = messageMapper.mapToEntity(message);
         Content content = message.getContent();
         Integer id;
+        //Every message is saved as a text, image and video details are saved in child tables
         if (ContentTypeEnum.TEXT.getValue().equals(content.getType())) {
             id = this.messageRepository.saveMessage(messageEntity);
         } else if (ContentTypeEnum.IMAGE.getValue().equals(content.getType())) {

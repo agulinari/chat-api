@@ -10,18 +10,18 @@ public interface UserService {
 
     /**
      * Create a user in the system.
-     * @param username
-     * @param password
-     * @return
+     * @param username Username
+     * @param password Password
+     * @return Created user
      * @throws InvalidUserException
      */
     UserResource createUser(String username, String password) throws InvalidUserException;
 
     /**
      * Log in as an existing user.
-     * @param username
-     * @param password
-     * @return
+     * @param username Username
+     * @param password Password
+     * @return User ID and JWT token
      * @throws InvalidUserException
      * @throws SQLException
      */
